@@ -18,7 +18,6 @@ int canReadSoil = 0;
 
 void setup() 
 {
-  Serial.begin(9600);   // open serial over USB
 
   pinMode(soilPower, OUTPUT);//Set D7 as an OUTPUT
   digitalWrite(soilPower, LOW);//Set to LOW so no power is flowing through the sensor
@@ -37,16 +36,11 @@ void loop() {
 
   if (buttonState != lastButtonState and buttonState == LOW){
     canReadSoil = (buttonPushCount % 2 == 0);
-
     buttonPushCount++;
-    Serial.print("Pressed button. buttonPushCount: ");
-    Serial.println(buttonPushCount);
   }
 
   if (canReadSoil){
-      Serial.print("Soil Moisture = ");
       int soil_value = readSoil();
-      Serial.println(soil_value);
       
       if (soil_value >= 885) { // It's wet! Nice and watered.
         digitalWrite(isWetPin, HIGH);
@@ -56,10 +50,7 @@ void loop() {
         digitalWrite(isWetPin, LOW);
         digitalWrite(isDryPin, HIGH);
       }
-
-      //This 1 second timefrme is used so you can test the sensor and see it change in real-time.
-      //For in-plant applications, you will want to take readings much less frequently.
-      delay(1000);//take a reading every second
+      delay(250);//take a reading every second
   }
   else{
     digitalWrite(isWetPin, LOW);
